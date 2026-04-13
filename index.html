@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR PMO Executive Portal · TelevisaUnivision</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:#F4F6F9;color:#0A1628;min-height:100vh}
+
+/* ── LOGIN ── */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0A1628}
+.lc{background:white;border-radius:16px;padding:48px 40px;width:360px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,0.3)}
+.lc-logo{width:52px;height:52px;background:#00B8A9;border-radius:14px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center}
+.lc-logo svg{width:26px;height:26px;fill:white}
+.lc-title{font-size:20px;font-weight:600;color:#0A1628;margin-bottom:5px}
+.lc-sub{font-size:13px;color:#8EA5BE;margin-bottom:32px;line-height:1.5}
+.lc input{width:100%;padding:13px 16px;border:1.5px solid rgba(10,22,40,0.12);border-radius:9px;font-size:15px;margin-bottom:11px;outline:none;text-align:center;letter-spacing:0.2em;font-family:inherit;transition:border-color 0.15s}
+.lc input:focus{border-color:#00B8A9}
+.lc-btn{width:100%;padding:13px;background:#0A1628;color:white;border:none;border-radius:9px;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:background 0.15s}
+.lc-btn:hover{background:#1a2d48}
+.lc-err{color:#E5303A;font-size:13px;margin-top:10px;display:none}
+.lc-foot{font-size:11px;color:#C5D2DE;margin-top:22px}
+
+/* ── APP SHELL ── */
+#app{display:none;min-height:100vh;flex-direction:column}
+
+/* ── NAV ── */
+.nav{background:#0A1628;display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;position:sticky;top:0;z-index:200;flex-shrink:0}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{width:28px;height:28px;background:#00B8A9;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-logo svg{width:15px;height:15px;fill:white}
+.nav-name{font-size:13px;font-weight:600;color:white}
+.nav-org{font-size:10px;color:rgba(255,255,255,0.35)}
+.nav-center{display:flex;gap:4px}
+.n-tab{padding:7px 16px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;color:rgba(255,255,255,0.45);border:none;background:transparent;font-family:inherit;transition:all 0.15s}
+.n-tab:hover{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8)}
+.n-tab.active{background:rgba(0,184,169,0.2);color:#00B8A9}
+.nav-right{display:flex;align-items:center;gap:10px}
+.live-pill{display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,0.3)}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#00B8A9;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+.nav-role{font-size:10px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.05em}
+.nav-av{width:30px;height:30px;border-radius:50%;background:#2D4A6B;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:rgba(255,255,255,0.75);cursor:pointer;transition:background 0.15s}
+.nav-av:hover{background:#3a5a80}
+
+/* ── VIEWS ── */
+.view{display:none;flex:1}
+.view.active{display:block}
+
+/* ════════════════════════════════
+   PORTFOLIO VIEW
+════════════════════════════════ */
+.ph{background:#0A1628;padding:24px 28px 0}
+.ph-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:16px}
+.eyebrow{font-size:10px;font-weight:600;color:#00B8A9;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px}
+.page-title{font-size:24px;font-weight:300;color:white;letter-spacing:-0.01em}
+.ph-right{text-align:right;flex-shrink:0}
+.ph-date{font-size:11px;color:rgba(255,255,255,0.28);margin-top:4px}
+
+/* Filters */
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;padding-bottom:0}
+.fc{padding:5px 13px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.48);background:transparent;font-family:inherit;transition:all 0.15s;margin-bottom:2px}
+.fc:hover,.fc.active{background:rgba(0,184,169,0.15);border-color:#00B8A9;color:#00B8A9}
+
+/* KPI band */
+.kpi-band{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:rgba(255,255,255,0.06);margin-top:18px}
+.kc{background:rgba(255,255,255,0.04);padding:14px 8px;text-align:center}
+.kn{font-size:26px;font-weight:600;color:white;line-height:1;margin-bottom:3px}
+.kn.g{color:#00B8A9}.kn.y{color:#F5A623}.kn.r{color:#E5303A}
+.kl{font-size:9px;color:rgba(255,255,255,0.36);letter-spacing:0.04em;text-transform:uppercase}
+
+/* Portfolio body */
+.pb{padding:24px 28px}
+.sec-label{font-size:10px;font-weight:500;color:#8EA5BE;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:3px}
+.sec-title{font-size:15px;font-weight:500;color:#0A1628;margin-bottom:14px}
+.sec-hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:14px}
+.sec-hint{font-size:11px;color:#8EA5BE}
+
+/* Project cards */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-bottom:28px}
+.pc{background:white;border-radius:10px;padding:16px;border:1px solid rgba(10,22,40,0.08);border-left:3px solid rgba(10,22,40,0.08);cursor:pointer;transition:all 0.18s}
+.pc:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(10,22,40,0.1)}
+.pc.Green{border-left-color:#00B8A9}
+.pc.Yellow{border-left-color:#F5A623}
+.pc.Red{border-left-color:#E5303A}
+.pc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px}
+.pc-name{font-size:12px;font-weight:600;color:#0A1628;line-height:1.35;flex:1;margin-right:7px}
+.rdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:2px}
+.rdot.Green{background:#00B8A9}.rdot.Yellow{background:#F5A623}.rdot.Red{background:#E5303A}
+.pc-id{font-size:10px;color:#8EA5BE;margin-bottom:4px;font-family:monospace}
+.pc-sponsor{font-size:11px;color:#5A7090;margin-bottom:8px}
+.pbar{height:3px;background:rgba(10,22,40,0.08);border-radius:2px;overflow:hidden;margin-bottom:7px}
+.pbar-f{height:100%;border-radius:2px;transition:width 0.6s ease}
+.pbar-f.Green{background:#00B8A9}.pbar-f.Yellow{background:#F5A623}.pbar-f.Red{background:#E5303A}
+.pc-bot{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.pc-pm{font-size:10px;color:#8EA5BE;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-pct{font-size:11px;font-weight:700}
+.pc-pct.Green{color:#00B8A9}.pc-pct.Yellow{color:#F5A623}.pc-pct.Red{color:#E5303A}
+.ph-pill{font-size:9px;font-weight:500;padding:2px 7px;border-radius:4px;background:rgba(10,22,40,0.06);color:#5A7090;white-space:nowrap}
+.ph-pill.on-hold{background:rgba(245,166,35,0.1);color:#B8770A}
+.ph-pill.closed{background:rgba(0,184,169,0.08);color:#008F84}
+
+/* Charts */
+.charts-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:28px}
+.ch-card{background:white;border-radius:10px;padding:18px;border:1px solid rgba(10,22,40,0.08)}
+.ch-lbl{font-size:11px;font-weight:500;color:#5A7090;margin-bottom:12px}
+.ch-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.lg-item{display:flex;align-items:center;gap:4px;font-size:10px;color:#5A7090}
+.lg-sq{width:7px;height:7px;border-radius:2px}
+
+/* At risk */
+.risk-tbl{margin-bottom:8px}
+.risk-thead{display:grid;grid-template-columns:2.5fr 1.5fr 1.5fr 1fr;gap:12px;padding:0 14px 8px;font-size:9px;font-weight:600;color:#8EA5BE;letter-spacing:0.05em;text-transform:uppercase}
+.risk-tr{background:white;border-radius:8px;padding:13px 14px;border:1px solid rgba(10,22,40,0.08);display:grid;grid-template-columns:2.5fr 1.5fr 1.5fr 1fr;align-items:center;gap:12px;margin-bottom:7px;border-left:3px solid;cursor:pointer;transition:all 0.15s}
+.risk-tr:hover{box-shadow:0 4px 14px rgba(10,22,40,0.09)}
+.risk-tr.Red{border-left-color:#E5303A}.risk-tr.Yellow{border-left-color:#F5A623}
+.tr-name{font-size:12px;font-weight:600;color:#0A1628}
+.tr-risk{font-size:10px;color:#8EA5BE;margin-top:2px;line-height:1.4}
+.tr-mini{font-size:9px;color:#8EA5BE;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:1px}
+.tr-val{font-size:11px;color:#5A7090}
+.ab{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;text-align:center;white-space:nowrap}
+.ab.Red{background:rgba(229,48,58,0.08);color:#E5303A}
+.ab.Yellow{background:rgba(245,166,35,0.1);color:#B8770A}
+
+/* ════════════════════════════════
+   PROJECT DETAIL VIEW
+════════════════════════════════ */
+.dh{background:#0A1628;padding:22px 28px}
+.back-btn{display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,0.4);cursor:pointer;background:none;border:none;padding:0;margin-bottom:18px;font-family:inherit;transition:color 0.15s}
+.back-btn:hover{color:rgba(255,255,255,0.75)}
+.dh-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.dh-left{flex:1;min-width:0}
+.dh-eyebrow{font-size:10px;font-weight:600;color:#00B8A9;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:7px}
+.dh-title{font-size:22px;font-weight:300;color:white;letter-spacing:-0.01em;line-height:1.3;margin-bottom:14px}
+.dh-badges{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rag-badge{font-size:11px;font-weight:700;padding:5px 13px;border-radius:20px}
+.rag-badge.Green{background:rgba(0,184,169,0.18);color:#00B8A9}
+.rag-badge.Yellow{background:rgba(245,166,35,0.18);color:#D4890A}
+.rag-badge.Red{background:rgba(229,48,58,0.18);color:#E5303A}
+.phase-badge{font-size:11px;font-weight:500;padding:5px 13px;border-radius:20px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.55)}
+.phase-badge.on-hold{background:rgba(245,166,35,0.15);color:#D4890A}
+.phase-badge.closed{background:rgba(0,184,169,0.12);color:#00B8A9}
+.id-badge{font-size:10px;font-weight:500;padding:5px 12px;border-radius:20px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.4);font-family:monospace}
+.dh-right{display:flex;gap:22px;flex-shrink:0}
+.dh-person{text-align:right}
+.dp-lbl{font-size:9px;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px}
+.dp-nm{font-size:13px;font-weight:500;color:white}
+.dp-rl{font-size:10px;color:rgba(255,255,255,0.32)}
+
+/* KPI row */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(10,22,40,0.1)}
+.kb{background:white;padding:18px 16px;text-align:center}
+.kb-lbl{font-size:9px;font-weight:500;color:#8EA5BE;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:9px}
+.kb-val{font-size:28px;font-weight:700;line-height:1;color:#0A1628}
+.kb-val.teal{color:#00B8A9}.kb-val.yellow{color:#F5A623}.kb-val.red{color:#E5303A}
+.kb-sub{font-size:11px;color:#8EA5BE;margin-top:5px}
+
+/* Detail body */
+.db{padding:20px 28px 40px}
+
+/* Status narrative */
+.narr{background:white;border-radius:10px;padding:20px 24px;border:1px solid rgba(10,22,40,0.08);border-left:3px solid #00B8A9;margin-bottom:16px}
+.narr.yellow{border-left-color:#F5A623}
+.narr.red{border-left-color:#E5303A}
+.narr-lbl{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#00B8A9;margin-bottom:7px}
+.narr.yellow .narr-lbl{color:#D4890A}
+.narr.red .narr-lbl{color:#E5303A}
+.narr-txt{font-size:13px;line-height:1.8;color:#0A1628}
+
+/* Info grid */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.ic{background:white;border-radius:10px;padding:18px;border:1px solid rgba(10,22,40,0.08)}
+.ic-lbl{font-size:9px;font-weight:500;color:#8EA5BE;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:3px}
+.ic-title{font-size:14px;font-weight:600;color:#0A1628;margin-bottom:14px}
+.field-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(10,22,40,0.06)}
+.field-row:last-child{border-bottom:none;padding-bottom:0}
+.field-lbl{font-size:11px;color:#8EA5BE;flex-shrink:0;margin-right:12px}
+.field-val{font-size:12px;font-weight:500;color:#0A1628;text-align:right;line-height:1.4}
+
+/* Milestone card */
+.ms-card{background:white;border-radius:10px;padding:18px 22px;border:1px solid rgba(10,22,40,0.08);margin-bottom:16px}
+.ms-row{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid rgba(10,22,40,0.06)}
+.ms-row:last-child{border-bottom:none;padding-bottom:0}
+.ms-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.ms-dot.done{background:#00B8A9}
+.ms-dot.upcoming{background:white;border:2px solid #00B8A9;box-shadow:0 0 0 3px rgba(0,184,169,0.15)}
+.ms-dot.future{background:white;border:2px solid rgba(10,22,40,0.15)}
+.ms-name{font-size:13px;font-weight:500;color:#0A1628;flex:1}
+.ms-date{font-size:12px;color:#8EA5BE}
+
+/* Risk/update card */
+.ru-card{background:white;border-radius:10px;padding:18px;border:1px solid rgba(10,22,40,0.08);margin-bottom:16px}
+.risk-block{padding:12px 14px;border-radius:8px;border-left:3px solid #E5303A;background:rgba(229,48,58,0.04);margin-bottom:8px}
+.risk-block.yellow{border-left-color:#F5A623;background:rgba(245,166,35,0.04)}
+.risk-title{font-size:12px;font-weight:600;color:#0A1628;margin-bottom:3px}
+.risk-sub{font-size:11px;color:#8EA5BE;line-height:1.5}
+
+/* Budget bar */
+.fin-card{background:white;border-radius:10px;padding:18px;border:1px solid rgba(10,22,40,0.08);margin-bottom:16px}
+.fb-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.fb-lbl{font-size:11px;color:#5A7090;width:90px;flex-shrink:0}
+.fb-track{flex:1;height:6px;background:rgba(10,22,40,0.07);border-radius:3px;overflow:hidden}
+.fb-fill{height:100%;border-radius:3px;transition:width 0.8s ease}
+.fb-val{font-size:11px;font-weight:600;color:#0A1628;width:55px;text-align:right}
+
+/* PMO Notes */
+.pmo-card{background:rgba(10,22,40,0.03);border-radius:10px;padding:16px 18px;border:1px solid rgba(10,22,40,0.07);margin-bottom:16px}
+.pmo-lbl{font-size:9px;font-weight:600;color:#8EA5BE;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px}
+.pmo-txt{font-size:13px;color:#5A7090;line-height:1.6}
+
+/* Responsive */
+@media(max-width:768px){
+  .kpi-band{grid-template-columns:repeat(3,1fr)}
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+  .charts-row,.info-grid{grid-template-columns:1fr}
+  .cards-grid{grid-template-columns:1fr}
+  .risk-thead,.risk-tr{grid-template-columns:1fr}
+  .dh-top{flex-direction:column}
+  .dh-right{flex-direction:row;text-align:left}
+  .nav,.pb,.db{padding-left:16px;padding-right:16px}
+  .ph,.dh{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="lc">
+    <div class="lc-logo"><svg viewBox="0 0 24 24"><path d="M12 3L4 8v13h6v-6h4v6h6V8z"/></svg></div>
+    <div class="lc-title">HR PMO Executive Portal</div>
+    <div class="lc-sub">TelevisaUnivision · People Operations<br>Enter your access code to continue</div>
+    <input type="password" id="pw" placeholder="Access code" autocomplete="off">
+    <button class="lc-btn" onclick="doLogin()">Enter Portal</button>
+    <div class="lc-err" id="pw-err">Incorrect access code. Please try again.</div>
+    <div class="lc-foot">Confidential · Authorized HR leadership only</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;flex-direction:column;min-height:100vh">
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-brand">
+      <div class="nav-logo"><svg viewBox="0 0 24 24"><path d="M12 3L4 8v13h6v-6h4v6h6V8z"/></svg></div>
+      <div>
+        <div class="nav-name">HR PMO Executive Portal</div>
+        <div class="nav-org">TelevisaUnivision · People Operations</div>
+      </div>
+    </div>
+    <div class="nav-center">
+      <button class="n-tab active" id="tab-port" onclick="showView('portfolio')">Portfolio</button>
+      <button class="n-tab" id="tab-det" onclick="showView('detail')" style="display:none">Project Detail</button>
+    </div>
+    <div class="nav-right">
+      <div class="live-pill"><span class="live-dot"></span><span id="upd-txt">Loading...</span></div>
+      <div class="nav-role" id="role-lbl"></div>
+      <div class="nav-av" id="nav-av" title="Sign out" onclick="doLogout()">--</div>
+    </div>
+  </nav>
+
+  <!-- PORTFOLIO VIEW -->
+  <div class="view active" id="view-portfolio">
+    <div class="ph">
+      <div class="ph-top">
+        <div>
+          <div class="eyebrow">People Operations · PMO</div>
+          <div class="page-title">Master Portfolio Tracker</div>
+        </div>
+        <div class="ph-right">
+          <div class="live-pill" style="justify-content:flex-end"><span class="live-dot"></span><span style="color:rgba(255,255,255,0.3);font-size:11px">Live data</span></div>
+          <div class="ph-date" id="port-date">—</div>
+        </div>
+      </div>
+      <div class="filter-bar" id="filter-bar">
+        <button class="fc active" onclick="filterBy('all',this)">All Projects</button>
+      </div>
+      <div class="kpi-band">
+        <div class="kc"><div class="kn" id="k-tot">—</div><div class="kl">Total</div></div>
+        <div class="kc"><div class="kn g" id="k-grn">—</div><div class="kl">On Track</div></div>
+        <div class="kc"><div class="kn y" id="k-yel">—</div><div class="kl">At Risk</div></div>
+        <div class="kc"><div class="kn r" id="k-red">—</div><div class="kl">Critical</div></div>
+        <div class="kc"><div class="kn y" id="k-del">—</div><div class="kl">Delayed</div></div>
+        <div class="kc"><div class="kn r" id="k-att">—</div><div class="kl">Needs Attention</div></div>
+      </div>
+    </div>
+    <div class="pb">
+      <div class="sec-hdr">
+        <div><div class="sec-label">Project Health Map</div><div class="sec-title">All Projects by RAG Status</div></div>
+        <div class="sec-hint">Click any project to view full detail</div>
+      </div>
+      <div class="cards-grid" id="cards-grid"></div>
+
+      <div class="sec-label">Portfolio Analytics</div>
+      <div class="sec-title" style="margin-bottom:14px">Cross-Project Insights</div>
+      <div class="charts-row">
+        <div class="ch-card">
+          <div class="ch-lbl">Projects by RAG status</div>
+          <div style="position:relative;width:100%;height:150px"><canvas id="ch-rag" role="img" aria-label="RAG status distribution">RAG chart.</canvas></div>
+          <div class="ch-legend" id="rag-legend"></div>
+        </div>
+        <div class="ch-card">
+          <div class="ch-lbl">Projects by phase</div>
+          <div style="position:relative;width:100%;height:190px"><canvas id="ch-phase" role="img" aria-label="Projects by phase">Phase chart.</canvas></div>
+        </div>
+        <div class="ch-card">
+          <div class="ch-lbl">Projects by strategic pillar</div>
+          <div style="position:relative;width:100%;height:190px"><canvas id="ch-pillar" role="img" aria-label="Projects by pillar">Pillar chart.</canvas></div>
+        </div>
+      </div>
+
+      <div class="sec-label">Requires Executive Attention</div>
+      <div class="sec-title" style="margin-bottom:10px">At-Risk & Critical Projects</div>
+      <div class="risk-tbl">
+        <div class="risk-thead"><span>Project / Top Risk</span><span>Project Manager</span><span>Next Milestone</span><span>Status</span></div>
+        <div id="risk-rows"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECT DETAIL VIEW -->
+  <div class="view" id="view-detail">
+    <div class="dh">
+      <button class="back-btn" onclick="showView('portfolio')">← Back to Portfolio</button>
+      <div class="dh-top">
+        <div class="dh-left">
+          <div class="dh-eyebrow" id="d-pillar">—</div>
+          <div class="dh-title" id="d-name">Loading...</div>
+          <div class="dh-badges">
+            <span class="rag-badge" id="d-rag">—</span>
+            <span class="phase-badge" id="d-phase">—</span>
+            <span class="id-badge" id="d-id">—</span>
+          </div>
+        </div>
+        <div class="dh-right">
+          <div class="dh-person">
+            <div class="dp-lbl">Executive Sponsor</div>
+            <div class="dp-nm" id="d-sponsor">—</div>
+            <div class="dp-rl">Sponsor</div>
+          </div>
+          <div class="dh-person">
+            <div class="dp-lbl">Project Manager</div>
+            <div class="dp-nm" id="d-pm">—</div>
+            <div class="dp-rl">PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI ROW -->
+    <div class="kpi-row">
+      <div class="kb"><div class="kb-lbl">% Complete</div><div class="kb-val teal" id="d-pct">—</div><div class="kb-sub">overall progress</div></div>
+      <div class="kb"><div class="kb-lbl">Days Remaining</div><div class="kb-val" id="d-days">—</div><div class="kb-sub" id="d-days-sub">—</div></div>
+      <div class="kb"><div class="kb-lbl">RAG Status</div><div class="kb-val" id="d-rag-kpi">—</div><div class="kb-sub">current health</div></div>
+      <div class="kb"><div class="kb-lbl">Phase</div><div class="kb-val" id="d-phase-kpi" style="font-size:18px">—</div><div class="kb-sub" id="d-phase-sub">—</div></div>
+    </div>
+
+    <div class="db">
+
+      <!-- NARRATIVE -->
+      <div class="narr" id="d-narr-card">
+        <div class="narr-lbl">Project Status Summary</div>
+        <div class="narr-txt" id="d-narr">Loading...</div>
+      </div>
+
+      <!-- SCHEDULE + SPONSOR INFO -->
+      <div class="info-grid">
+        <div class="ic">
+          <div class="ic-lbl">Timeline</div>
+          <div class="ic-title">Project Schedule</div>
+          <div class="field-row"><span class="field-lbl">Start Date</span><span class="field-val" id="d-start">—</span></div>
+          <div class="field-row"><span class="field-lbl">Target End Date</span><span class="field-val" id="d-end">—</span></div>
+          <div class="field-row"><span class="field-lbl">Actual End Date</span><span class="field-val" id="d-actual-end">—</span></div>
+          <div class="field-row"><span class="field-lbl">Last Updated</span><span class="field-val" id="d-updated">—</span></div>
+        </div>
+        <div class="ic">
+          <div class="ic-lbl">Governance</div>
+          <div class="ic-title">Project Leadership</div>
+          <div class="field-row"><span class="field-lbl">Executive Sponsor</span><span class="field-val" id="d-sp2">—</span></div>
+          <div class="field-row"><span class="field-lbl">Project Manager</span><span class="field-val" id="d-pm2">—</span></div>
+          <div class="field-row"><span class="field-lbl">Strategic Pillar</span><span class="field-val" id="d-pil2">—</span></div>
+          <div class="field-row"><span class="field-lbl">Project ID</span><span class="field-val" id="d-id2" style="font-family:monospace">—</span></div>
+        </div>
+      </div>
+
+      <!-- NEXT MILESTONE -->
+      <div class="ms-card">
+        <div class="ic-lbl">Schedule</div>
+        <div class="ic-title" style="margin-bottom:10px">Next Milestone</div>
+        <div class="ms-row">
+          <div class="ms-dot upcoming"></div>
+          <div class="ms-name" id="d-ms-name">—</div>
+          <div class="ms-date" id="d-ms-date">—</div>
+        </div>
+      </div>
+
+      <!-- TOP RISK + WEEKLY UPDATE -->
+      <div class="info-grid">
+        <div class="ru-card">
+          <div class="ic-lbl">Risk Register</div>
+          <div class="ic-title">Top Risk</div>
+          <div class="risk-block" id="d-risk-block">
+            <div class="risk-title" id="d-risk">—</div>
+            <div class="risk-sub">Update risks directly in your Smartsheet — they sync automatically.</div>
+          </div>
+        </div>
+        <div class="ru-card">
+          <div class="ic-lbl">Status Update</div>
+          <div class="ic-title">Weekly Update</div>
+          <div style="font-size:13px;color:#5A7090;line-height:1.7" id="d-update">—</div>
+        </div>
+      </div>
+
+      <!-- PMO NOTES -->
+      <div class="pmo-card" id="d-pmo-section">
+        <div class="pmo-lbl">PMO Director Notes</div>
+        <div class="pmo-txt" id="d-pmo">—</div>
+      </div>
+
+      <!-- PROGRESS BAR -->
+      <div class="fin-card">
+        <div class="ic-lbl">Progress</div>
+        <div class="ic-title" style="margin-bottom:14px">Overall Completion</div>
+        <div class="fb-row">
+          <div class="fb-lbl">% Complete</div>
+          <div class="fb-track"><div class="fb-fill" id="d-prog-fill" style="background:#00B8A9"></div></div>
+          <div class="fb-val" id="d-prog-val">—</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// CONFIGURATION — Change passwords here
+// ══════════════════════════════════════════════
+const PW_EXEC = 'CHRO2026';    // Password A — executives, sponsors, HRBPs
+const PW_PMO  = 'PMO2026';     // Password B — PMO Directors only
+const DATA_URL = 'data.json';  // Leave this as-is
+// ══════════════════════════════════════════════
+
+let role = null, projects = [], portfolio = {};
+let cRag = null, cPhase = null, cPillar = null;
+
+// ── LOGIN ──
+function doLogin() {
+  const v = document.getElementById('pw').value.trim();
+  if (v === PW_EXEC) { role = 'executive'; launch(); }
+  else if (v === PW_PMO) { role = 'pmo'; launch(); }
+  else {
+    document.getElementById('pw-err').style.display = 'block';
+    document.getElementById('pw').value = '';
+    document.getElementById('pw').focus();
+  }
+}
+document.getElementById('pw').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+function doLogout() {
+  role = null;
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('pw').value = '';
+  document.getElementById('pw-err').style.display = 'none';
+}
+
+// ── LAUNCH ──
+function launch() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  if (role === 'pmo') {
+    document.getElementById('nav-av').textContent = 'JD';
+    document.getElementById('role-lbl').textContent = 'PMO Director';
+  } else {
+    document.getElementById('nav-av').textContent = 'EX';
+    document.getElementById('role-lbl').textContent = 'Executive';
+  }
+  loadData();
+}
+
+// ── LOAD DATA ──
+async function loadData() {
+  try {
+    const res = await fetch(DATA_URL + '?_=' + Date.now());
+    const d = await res.json();
+    projects = d.projects || [];
+    portfolio = d.portfolio || {};
+    const dt = new Date(d.lastUpdated);
+    const dtStr = dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) +
+      ' · ' + dt.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('upd-txt').textContent = dtStr;
+    document.getElementById('port-date').textContent = 'As of ' + dtStr;
+    renderPortfolio();
+  } catch(e) {
+    document.getElementById('upd-txt').textContent = 'Data unavailable';
+    console.error(e);
+  }
+  setTimeout(loadData, 90000);
+}
+
+// ── VIEW SWITCH ──
+function showView(v) {
+  document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.n-tab').forEach(x => x.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  if (v === 'portfolio') {
+    document.getElementById('tab-port').classList.add('active');
+    document.getElementById('tab-det').style.display = 'none';
+  } else {
+    document.getElementById('tab-det').style.display = 'block';
+    document.getElementById('tab-det').classList.add('active');
+  }
+  window.scrollTo(0,0);
+}
+
+// ── OPEN PROJECT ──
+function openProject(id) {
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  renderDetail(p);
+  showView('detail');
+}
+
+// ── PORTFOLIO RENDER ──
+function renderPortfolio() {
+  document.getElementById('k-tot').textContent = projects.length;
+  document.getElementById('k-grn').textContent = projects.filter(p=>p.ragStatus==='Green').length;
+  document.getElementById('k-yel').textContent = projects.filter(p=>p.ragStatus==='Yellow').length;
+  document.getElementById('k-red').textContent = projects.filter(p=>p.ragStatus==='Red').length;
+  document.getElementById('k-del').textContent = portfolio.delayed || 0;
+  document.getElementById('k-att').textContent = portfolio.needsAttention || 0;
+
+  // Pillar filters
+  const pillars = [...new Set(projects.map(p=>p.strategicPillar).filter(Boolean))].sort();
+  const fb = document.getElementById('filter-bar');
+  fb.innerHTML = '<button class="fc active" onclick="filterBy(\'all\',this)">All Projects</button>';
+  pillars.forEach(pl => {
+    const b = document.createElement('button');
+    b.className = 'fc'; b.textContent = pl;
+    b.onclick = function(){ filterBy(pl,this); };
+    fb.appendChild(b);
+  });
+
+  renderCards(projects);
+  renderCharts(projects);
+  renderRiskRows(projects.filter(p=>p.ragStatus==='Red'||p.ragStatus==='Yellow'));
+}
+
+function filterBy(pillar, btn) {
+  document.querySelectorAll('.fc').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards(pillar==='all' ? projects : projects.filter(p=>p.strategicPillar===pillar));
+}
+
+function phaseClass(ph) {
+  if (!ph) return '';
+  const p = ph.toLowerCase();
+  if (p==='on hold') return 'on-hold';
+  if (p==='closed') return 'closed';
+  return '';
+}
+
+function renderCards(list) {
+  const g = document.getElementById('cards-grid');
+  g.innerHTML = '';
+  if (!list.length) { g.innerHTML = '<div style="color:#8EA5BE;font-size:13px;padding:16px;">No projects match this filter.</div>'; return; }
+  list.forEach(p => {
+    const d = document.createElement('div');
+    d.className = 'pc ' + p.ragStatus;
+    d.onclick = () => openProject(p.id);
+    d.innerHTML = `
+      <div class="pc-top">
+        <div class="pc-name">${p.name}</div>
+        <div class="rdot ${p.ragStatus}"></div>
+      </div>
+      <div class="pc-id">${p.id}</div>
+      <div class="pc-sponsor">${p.sponsor||''}</div>
+      <div class="pbar"><div class="pbar-f ${p.ragStatus}" style="width:${p.percentComplete||0}%"></div></div>
+      <div class="pc-bot">
+        <div class="pc-pm">${p.projectManager||''}</div>
+        <div class="pc-pct ${p.ragStatus}">${p.percentComplete||0}%</div>
+        <span class="ph-pill ${phaseClass(p.phase)}">${p.phase||''}</span>
+      </div>`;
+    g.appendChild(d);
+  });
+}
+
+function renderRiskRows(list) {
+  const c = document.getElementById('risk-rows');
+  c.innerHTML = '';
+  if (!list.length) { c.innerHTML = '<div style="padding:14px;font-size:13px;color:#8EA5BE;">All projects are currently on track.</div>'; return; }
+  list.forEach(p => {
+    const r = document.createElement('div');
+    r.className = 'risk-tr ' + p.ragStatus;
+    r.onclick = () => openProject(p.id);
+    r.innerHTML = `
+      <div>
+        <div class="tr-name">${p.name}</div>
+        <div class="tr-risk">${p.topRisk||'See project detail'}</div>
+      </div>
+      <div>
+        <div class="tr-mini">PM</div>
+        <div class="tr-val">${p.projectManager||'—'}</div>
+      </div>
+      <div>
+        <div class="tr-mini">Next Milestone</div>
+        <div class="tr-val">${p.nextMilestone||'—'}</div>
+      </div>
+      <div><span class="ab ${p.ragStatus}">${p.ragStatus==='Red'?'Needs CHRO':'Watch'}</span></div>`;
+    c.appendChild(r);
+  });
+}
+
+function renderCharts(list) {
+  const g = list.filter(p=>p.ragStatus==='Green').length;
+  const y = list.filter(p=>p.ragStatus==='Yellow').length;
+  const r = list.filter(p=>p.ragStatus==='Red').length;
+
+  if(cRag) cRag.destroy();
+  cRag = new Chart(document.getElementById('ch-rag'),{
+    type:'doughnut',
+    data:{labels:['Green','Yellow','Red'],datasets:[{data:[g,y,r],backgroundColor:['#00B8A9','#F5A623','#E5303A'],borderWidth:0,hoverOffset:4}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{display:false}}}
+  });
+  document.getElementById('rag-legend').innerHTML=`
+    <span class="lg-item"><span class="lg-sq" style="background:#00B8A9"></span>Green (${g})</span>
+    <span class="lg-item"><span class="lg-sq" style="background:#F5A623"></span>Yellow (${y})</span>
+    <span class="lg-item"><span class="lg-sq" style="background:#E5303A"></span>Red (${r})</span>`;
+
+  const phaseMap={};
+  list.forEach(p=>{ if(p.phase) phaseMap[p.phase]=(phaseMap[p.phase]||0)+1; });
+  if(cPhase) cPhase.destroy();
+  cPhase = new Chart(document.getElementById('ch-phase'),{
+    type:'bar',
+    data:{labels:Object.keys(phaseMap),datasets:[{data:Object.values(phaseMap),backgroundColor:'#2D4A6B',borderRadius:4,borderSkipped:false}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{display:false},ticks:{stepSize:1,font:{size:11}}},y:{grid:{display:false},ticks:{font:{size:11}}}}}
+  });
+
+  const pillarMap={};
+  list.forEach(p=>{ if(p.strategicPillar) pillarMap[p.strategicPillar]=(pillarMap[p.strategicPillar]||0)+1; });
+  if(cPillar) cPillar.destroy();
+  cPillar = new Chart(document.getElementById('ch-pillar'),{
+    type:'bar',
+    data:{labels:Object.keys(pillarMap),datasets:[{data:Object.values(pillarMap),backgroundColor:Object.keys(pillarMap).map((_,i)=>['#00B8A9','#2D4A6B','#F5A623','#E5303A','#5A7090','#8EA5BE'][i%6]),borderRadius:4,borderSkipped:false}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{display:false},ticks:{stepSize:1,font:{size:11}}},y:{grid:{display:false},ticks:{font:{size:11}}}}}
+  });
+}
+
+// ── DETAIL RENDER ──
+function renderDetail(p) {
+  const fmtDate = d => { if(!d) return '—'; try{ return new Date(d).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}); }catch(e){return d;} };
+
+  document.getElementById('d-pillar').textContent = (p.strategicPillar||'') + ' · HR PMO';
+  document.getElementById('d-name').textContent = p.name || '—';
+  document.getElementById('d-sponsor').textContent = p.sponsor || '—';
+  document.getElementById('d-pm').textContent = p.projectManager || '—';
+  document.getElementById('d-sp2').textContent = p.sponsor || '—';
+  document.getElementById('d-pm2').textContent = p.projectManager || '—';
+  document.getElementById('d-pil2').textContent = p.strategicPillar || '—';
+  document.getElementById('d-id').textContent = p.id || '—';
+  document.getElementById('d-id2').textContent = p.id || '—';
+
+  const ragEl = document.getElementById('d-rag');
+  ragEl.textContent = p.ragStatus || '—';
+  ragEl.className = 'rag-badge ' + (p.ragStatus||'');
+
+  const phEl = document.getElementById('d-phase');
+  phEl.textContent = p.phase || '—';
+  phEl.className = 'phase-badge ' + phaseClass(p.phase);
+
+  document.getElementById('d-pct').textContent = (p.percentComplete||0) + '%';
+  document.getElementById('d-prog-fill').style.width = (p.percentComplete||0) + '%';
+  document.getElementById('d-prog-fill').style.background = p.ragStatus==='Red'?'#E5303A':p.ragStatus==='Yellow'?'#F5A623':'#00B8A9';
+  document.getElementById('d-prog-val').textContent = (p.percentComplete||0) + '%';
+
+  const days = p.targetEndDate ? Math.ceil((new Date(p.targetEndDate)-new Date())/86400000) : null;
+  const dEl = document.getElementById('d-days');
+  if (days !== null) {
+    dEl.textContent = Math.abs(days);
+    dEl.className = 'kb-val ' + (days<0?'red':days<30?'yellow':'teal');
+    document.getElementById('d-days-sub').textContent = days<0 ? 'days overdue' : 'days remaining';
+  } else { dEl.textContent = '—'; document.getElementById('d-days-sub').textContent = 'no end date set'; }
+
+  const ragKpi = document.getElementById('d-rag-kpi');
+  ragKpi.textContent = p.ragStatus || '—';
+  ragKpi.className = 'kb-val ' + (p.ragStatus==='Green'?'teal':p.ragStatus==='Yellow'?'yellow':'red');
+
+  const phKpi = document.getElementById('d-phase-kpi');
+  phKpi.textContent = p.phase || '—';
+  document.getElementById('d-phase-sub').textContent = 'current phase';
+
+  document.getElementById('d-start').textContent = fmtDate(p.startDate);
+  document.getElementById('d-end').textContent = fmtDate(p.targetEndDate);
+  document.getElementById('d-actual-end').textContent = p.actualEndDate ? fmtDate(p.actualEndDate) : 'In progress';
+  document.getElementById('d-updated').textContent = fmtDate(p.lastUpdated);
+
+  document.getElementById('d-ms-name').textContent = p.nextMilestone || 'No milestone recorded';
+  document.getElementById('d-ms-date').textContent = p.milestoneDate ? fmtDate(p.milestoneDate) : '—';
+
+  document.getElementById('d-risk').textContent = p.topRisk || 'No risks logged';
+  const rb = document.getElementById('d-risk-block');
+  rb.className = 'risk-block' + (p.ragStatus==='Yellow'?' yellow':'');
+
+  document.getElementById('d-update').textContent = p.weeklyUpdate || 'No update this week.';
+
+  const pmoSection = document.getElementById('d-pmo-section');
+  if (role === 'pmo' && p.pmoNotes) {
+    pmoSection.style.display = 'block';
+    document.getElementById('d-pmo').textContent = p.pmoNotes;
+  } else {
+    pmoSection.style.display = 'none';
+  }
+
+  const narr = document.getElementById('d-narr-card');
+  narr.className = 'narr ' + (p.ragStatus==='Yellow'?'yellow':p.ragStatus==='Red'?'red':'');
+  document.getElementById('d-narr').textContent =
+    p.name + ' is currently in the ' + (p.phase||'—') + ' phase at ' + (p.percentComplete||0) + '% complete. ' +
+    'RAG status is ' + (p.ragStatus||'—') + '. ' +
+    (p.ragStatus==='Green' ? 'The project is progressing on schedule. ' :
+     p.ragStatus==='Yellow' ? 'The project requires monitoring — risks may affect the timeline. ' :
+     'Immediate attention required — this project faces critical issues. ') +
+    (p.topRisk ? 'Top risk: ' + p.topRisk + '. ' : '') +
+    (p.weeklyUpdate ? 'Latest update: ' + p.weeklyUpdate : '');
+
+  document.getElementById('tab-det').textContent = p.name.split(' ').slice(0,3).join(' ') + '...';
+}
+</script>
+</body>
+</html>

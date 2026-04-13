@@ -1,0 +1,32 @@
+{
+  "lastUpdated": "2026-04-13T17:00:00Z",
+  "portfolio": {
+    "totalProjects": 1,
+    "onTrack": 0,
+    "atRisk": 1,
+    "critical": 0,
+    "delayed": 0,
+    "needsAttention": 1
+  },
+  "projects": [
+    {
+      "id": "BEN-26-001",
+      "name": "Benefits Platform Migration",
+      "projectManager": "K. Patel",
+      "sponsor": "Elena Vásquez",
+      "strategicPillar": "Total Rewards",
+      "phase": "Execution",
+      "ragStatus": "Yellow",
+      "percentComplete": 31,
+      "startDate": "2026-02-01",
+      "targetEndDate": "2026-08-30",
+      "actualEndDate": "",
+      "nextMilestone": "Vendor Contract Execution",
+      "milestoneDate": "2026-04-25",
+      "topRisk": "Vendor contract not executed — blocks all Q2 deliverables",
+      "weeklyUpdate": "Escalation call with vendor scheduled for April 16",
+      "lastUpdated": "2026-04-10",
+      "pmoNotes": "Needs CHRO attention"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-14T18:58:44.805Z",
+  "lastUpdated": "2026-04-14T18:59:52.858Z",
   "portfolio": {
     "totalProjects": 4,
     "onTrack": 1,
@@ -27,7 +27,7 @@
       "weeklyUpdate": "",
       "lastUpdated": "",
       "pmoNotes": "",
-      "area": ""
+      "area": "Total Rewards"
     },
     {
       "id": "COMP-26-001",
@@ -47,7 +47,7 @@
       "weeklyUpdate": "",
       "lastUpdated": "",
       "pmoNotes": "",
-      "area": ""
+      "area": "Total Rewards"
     },
     {
       "id": "TAL-26-001",
@@ -67,7 +67,7 @@
       "weeklyUpdate": "",
       "lastUpdated": "",
       "pmoNotes": "",
-      "area": ""
+      "area": "Talent"
     },
     {
       "id": "HRIS-26-001",
@@ -87,7 +87,7 @@
       "weeklyUpdate": "",
       "lastUpdated": "",
       "pmoNotes": "",
-      "area": ""
+      "area": "HRBPs"
     }
   ]
 }

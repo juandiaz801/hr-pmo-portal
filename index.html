@@ -13,8 +13,8 @@ body{font-family:'DM Sans',-apple-system,system-ui,sans-serif;background:#F4F6F9
 #login-screen::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 60% 40%,rgba(0,184,169,0.12) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 20% 80%,rgba(45,74,107,0.4) 0%,transparent 60%)}
 .lc{background:rgba(255,255,255,0.04);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:48px 40px;width:380px;text-align:center;position:relative;z-index:1;animation:fadeUp 0.5s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.lc-logo{width:56px;height:56px;background:linear-gradient(135deg,#00B8A9,#007A73);border-radius:16px;margin:0 auto 22px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,184,169,0.35)}
-.lc-logo svg{width:26px;height:26px;fill:white}
+.lc-logo{width:56px;height:56px;background:none;box-shadow:none;width:auto;padding:8px;margin:0 auto 22px;display:flex;align-items:center;justify-content:center}
+.lc-logo img{height:40px;width:auto}
 .lc-title{font-size:20px;font-weight:600;color:white;margin-bottom:5px;letter-spacing:-0.02em}
 .lc-sub{font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:32px;line-height:1.6}
 .lc input{width:100%;padding:14px 16px;border:1px solid rgba(255,255,255,0.12);border-radius:10px;font-size:15px;margin-bottom:11px;outline:none;text-align:center;letter-spacing:0.2em;font-family:inherit;background:rgba(255,255,255,0.06);color:white;transition:all 0.2s}
@@ -42,6 +42,8 @@ body{font-family:'DM Sans',-apple-system,system-ui,sans-serif;background:#F4F6F9
 .nav-role{font-size:10px;color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:0.07em}
 .nav-av{width:30px;height:30px;border-radius:50%;background:#2D4A6B;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:rgba(255,255,255,0.7);cursor:pointer;transition:background 0.15s}
 .nav-av:hover{background:#3a5a80}
+/* Area badge in nav */
+.area-badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(0,184,169,0.2);color:#00B8A9;letter-spacing:0.04em;text-transform:uppercase}
 .view{display:none;flex:1}
 .view.active{display:block}
 .ph{background:#0A1628;padding:24px 28px 0}
@@ -197,7 +199,7 @@ body{font-family:'DM Sans',-apple-system,system-ui,sans-serif;background:#F4F6F9
 <body>
 <div id="login-screen">
   <div class="lc">
-    <div class="lc-logo" style="background:none;box-shadow:none;width:auto;padding:8px"><img src="logo.png" alt="TelevisaUnivision" style="height:40px;width:auto"></div>
+    <div class="lc-logo"><img src="logo.png" alt="TelevisaUnivision"></div>
     <div class="lc-title">HR PMO Executive Portal</div>
     <div class="lc-sub">TelevisaUnivision · SVP Total Rewards<br>Enter your access code to continue</div>
     <input type="password" id="pw" placeholder="Access code" autocomplete="off">
@@ -221,6 +223,7 @@ body{font-family:'DM Sans',-apple-system,system-ui,sans-serif;background:#F4F6F9
     </div>
     <div class="nav-right">
       <div class="live-pill"><span class="live-dot"></span><span id="upd-txt">Loading...</span></div>
+      <div class="area-badge" id="area-badge" style="display:none"></div>
       <div class="nav-role" id="role-lbl"></div>
       <div class="nav-av" id="nav-av" title="Sign out" onclick="doLogout()">--</div>
     </div>
@@ -229,8 +232,8 @@ body{font-family:'DM Sans',-apple-system,system-ui,sans-serif;background:#F4F6F9
     <div class="ph">
       <div class="ph-top">
         <div>
-          <div class="eyebrow">HR PMO</div>
-          <div class="page-title">Master Portfolio Tracker</div>
+          <div class="eyebrow" id="port-eyebrow">HR PMO</div>
+          <div class="page-title" id="port-title">Master Portfolio Tracker</div>
         </div>
         <div class="ph-right">
           <button class="btn-pdf" onclick="exportPDF()">
@@ -328,34 +331,67 @@ body{font-family:'DM Sans',-apple-system,system-ui,sans-serif;background:#F4F6F9
   </div>
 </div>
 <script>
-const PW_EXEC='HR2026',PW_PMO='Juan8010',DATA_URL='data.json';
-let role=null,projects=[],portfolio={};
-let cRag=null,cPhase=null,cPillar=null;
+// ══════════════════════════════════════════════
+// CONFIGURATION — passwords & area filter
+// ══════════════════════════════════════════════
+const ROLES = {
+  'Juan8010':   { label: 'PMO Director',   initials: 'JD', area: null },
+  'CHRO2026':   { label: 'Executive',      initials: 'EX', area: null },
+  'HRBPs2026':  { label: 'HRBPs Head',     initials: 'HR', area: 'HRBPs' },
+  'Talent2026': { label: 'Talent Head',    initials: 'TL', area: 'Talent' },
+  'TotalR2026': { label: 'Total Rewards',  initials: 'TR', area: 'Total Rewards' },
+};
+const DATA_URL = 'data.json';
+// ══════════════════════════════════════════════
 
+let role=null, areaFilter=null, projects=[], portfolio={};
+let cRag=null, cPhase=null, cPillar=null;
+
+// ── LOGIN ──
 function doLogin(){
   const v=document.getElementById('pw').value.trim();
-  if(v===PW_EXEC){role='executive';launch();}
-  else if(v===PW_PMO){role='pmo';launch();}
-  else{document.getElementById('pw-err').style.display='block';document.getElementById('pw').value='';document.getElementById('pw').focus();}
+  const cfg=ROLES[v];
+  if(cfg){
+    role=cfg.label;
+    areaFilter=cfg.area;
+    launch(cfg);
+  } else {
+    document.getElementById('pw-err').style.display='block';
+    document.getElementById('pw').value='';
+    document.getElementById('pw').focus();
+  }
 }
 document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
 function doLogout(){
-  role=null;
+  role=null; areaFilter=null;
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('app').style.display='none';
   document.getElementById('pw').value='';
   document.getElementById('pw-err').style.display='none';
 }
 
-function launch(){
+function launch(cfg){
   document.getElementById('login-screen').style.display='none';
   document.getElementById('app').style.display='flex';
-  if(role==='pmo'){document.getElementById('nav-av').textContent='JD';document.getElementById('role-lbl').textContent='PMO Director';}
-  else{document.getElementById('nav-av').textContent='EX';document.getElementById('role-lbl').textContent='Executive';}
+  document.getElementById('nav-av').textContent=cfg.initials;
+  document.getElementById('role-lbl').textContent=cfg.label;
+  // Show area badge if filtered view
+  const badge=document.getElementById('area-badge');
+  if(cfg.area){
+    badge.textContent=cfg.area;
+    badge.style.display='block';
+    document.getElementById('port-eyebrow').textContent=cfg.area+' · HR PMO';
+    document.getElementById('port-title').textContent=cfg.area+' Portfolio';
+  } else {
+    badge.style.display='none';
+    document.getElementById('port-eyebrow').textContent='HR PMO';
+    document.getElementById('port-title').textContent='Master Portfolio Tracker';
+  }
   loadData();
 }
 
+// ── LOAD DATA ──
 async function loadData(){
   try{
     const res=await fetch(DATA_URL+'?_='+Date.now());
@@ -371,6 +407,13 @@ async function loadData(){
   setTimeout(loadData,90000);
 }
 
+// ── GET VISIBLE PROJECTS (filtered by area if applicable) ──
+function visibleProjects(){
+  if(!areaFilter) return projects;
+  return projects.filter(p=>p.area===areaFilter);
+}
+
+// ── VIEW SWITCH ──
 function showView(v){
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.n-tab').forEach(x=>x.classList.remove('active'));
@@ -422,35 +465,41 @@ function phaseClass(ph){
   return'';
 }
 
+// ── PORTFOLIO RENDER ──
 function renderPortfolio(){
-  const grn=projects.filter(p=>ragNorm(p.ragStatus)==='Green').length;
-  const yel=projects.filter(p=>ragNorm(p.ragStatus)==='Yellow').length;
-  const red=projects.filter(p=>ragNorm(p.ragStatus)==='Red').length;
-  animateCounter(document.getElementById('k-tot'),projects.length);
+  const list=visibleProjects();
+  const grn=list.filter(p=>ragNorm(p.ragStatus)==='Green').length;
+  const yel=list.filter(p=>ragNorm(p.ragStatus)==='Yellow').length;
+  const red=list.filter(p=>ragNorm(p.ragStatus)==='Red').length;
+  animateCounter(document.getElementById('k-tot'),list.length);
   animateCounter(document.getElementById('k-grn'),grn);
   animateCounter(document.getElementById('k-yel'),yel);
   animateCounter(document.getElementById('k-red'),red);
-  animateCounter(document.getElementById('k-del'),portfolio.delayed||0);
-  animateCounter(document.getElementById('k-att'),portfolio.needsAttention||0);
-  const pillars=[...new Set(projects.map(p=>p.strategicPillar).filter(Boolean))].sort();
+  animateCounter(document.getElementById('k-del'),yel+red);
+  animateCounter(document.getElementById('k-att'),red);
+
+  // Pillar filters — only from visible projects
+  const pillars=[...new Set(list.map(p=>p.strategicPillar).filter(Boolean))].sort();
   const fb=document.getElementById('filter-bar');
   fb.innerHTML='<button class="fc active" onclick="filterBy(\'all\',this)">All Projects</button>';
   pillars.forEach(pl=>{const b=document.createElement('button');b.className='fc';b.textContent=pl;b.onclick=function(){filterBy(pl,this);};fb.appendChild(b);});
-  renderCards(projects);
-  renderCharts(projects);
-  renderRiskRows(projects.filter(p=>ragNorm(p.ragStatus)==='Red'||ragNorm(p.ragStatus)==='Yellow'));
+
+  renderCards(list);
+  renderCharts(list);
+  renderRiskRows(list.filter(p=>ragNorm(p.ragStatus)==='Red'||ragNorm(p.ragStatus)==='Yellow'));
 }
 
 function filterBy(pillar,btn){
   document.querySelectorAll('.fc').forEach(c=>c.classList.remove('active'));
   btn.classList.add('active');
-  renderCards(pillar==='all'?projects:projects.filter(p=>p.strategicPillar===pillar));
+  const list=visibleProjects();
+  renderCards(pillar==='all'?list:list.filter(p=>p.strategicPillar===pillar));
 }
 
 function renderCards(list){
   const g=document.getElementById('cards-grid');
   g.innerHTML='';
-  if(!list.length){g.innerHTML='<div style="color:#8EA5BE;font-size:13px;padding:16px;">No projects match this filter.</div>';return;}
+  if(!list.length){g.innerHTML='<div style="color:#8EA5BE;font-size:13px;padding:16px;">No projects found.</div>';return;}
   list.forEach((p,i)=>{
     const rag=ragNorm(p.ragStatus);
     const d=document.createElement('div');
@@ -547,7 +596,8 @@ function renderDetail(p){
   document.getElementById('d-risk-block').className='risk-block'+(rag==='Yellow'?' yellow':'');
   document.getElementById('d-update').textContent=p.weeklyUpdate||'No update this week.';
   const pmoS=document.getElementById('d-pmo-section');
-  if(role==='pmo'&&p.pmoNotes){pmoS.style.display='block';document.getElementById('d-pmo').textContent=p.pmoNotes;}else pmoS.style.display='none';
+  if(role==='PMO Director'&&p.pmoNotes){pmoS.style.display='block';document.getElementById('d-pmo').textContent=p.pmoNotes;}
+  else pmoS.style.display='none';
   const narr=document.getElementById('d-narr-card');
   narr.className='narr '+(rag==='Yellow'?'yellow':rag==='Red'?'red':'');
   document.getElementById('d-narr').textContent=

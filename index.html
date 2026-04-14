@@ -50,12 +50,9 @@ body{font-family:'DM Sans',-apple-system,system-ui,sans-serif;background:#F4F6F9
 .page-title{font-size:26px;font-weight:300;color:white;letter-spacing:-0.02em}
 .ph-right{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 .ph-date{font-size:11px;color:rgba(255,255,255,0.25)}
-.action-btns{display:flex;gap:8px;align-items:center}
 .btn-pdf{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;transition:all 0.2s}
 .btn-pdf:hover{background:rgba(255,255,255,0.12);color:white}
-.btn-ai{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;background:linear-gradient(135deg,rgba(0,184,169,0.25),rgba(0,122,115,0.25));border:1px solid rgba(0,184,169,0.4);color:#00B8A9;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;transition:all 0.2s}
-.btn-ai:hover{background:linear-gradient(135deg,rgba(0,184,169,0.38),rgba(0,122,115,0.38));box-shadow:0 0 16px rgba(0,184,169,0.25)}
-.btn-ai svg,.btn-pdf svg{width:13px;height:13px;flex-shrink:0}
+.btn-pdf svg{width:13px;height:13px;flex-shrink:0}
 .filter-bar{display:flex;gap:6px;flex-wrap:wrap}
 .fc{padding:5px 13px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.42);background:transparent;font-family:inherit;transition:all 0.15s}
 .fc:hover,.fc.active{background:rgba(0,184,169,0.15);border-color:#00B8A9;color:#00B8A9}
@@ -65,23 +62,6 @@ body{font-family:'DM Sans',-apple-system,system-ui,sans-serif;background:#F4F6F9
 .kn{font-size:28px;font-weight:600;color:white;line-height:1;margin-bottom:3px;letter-spacing:-0.02em}
 .kn.g{color:#00B8A9}.kn.y{color:#F5A623}.kn.r{color:#E5303A}
 .kl{font-size:9px;color:rgba(255,255,255,0.32);letter-spacing:0.06em;text-transform:uppercase}
-.ai-panel{background:white;border-radius:12px;padding:22px 24px;border:1px solid rgba(0,184,169,0.2);margin-bottom:20px;position:relative;overflow:hidden;animation:slideDown 0.3s ease}
-@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-.ai-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#00B8A9,#007A73,#2D4A6B)}
-.ai-panel-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.ai-panel-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#00B8A9;letter-spacing:0.06em;text-transform:uppercase}
-.ai-panel-title svg{width:14px;height:14px}
-.ai-close{background:none;border:none;cursor:pointer;color:#8EA5BE;font-size:16px;line-height:1;padding:0 2px;transition:color 0.15s}
-.ai-close:hover{color:#0A1628}
-.ai-text{font-size:14px;line-height:1.8;color:#2D3748}
-.ai-loading{display:flex;align-items:center;gap:10px;color:#8EA5BE;font-size:13px}
-.ai-dots{display:flex;gap:4px}
-.ai-dots span{width:6px;height:6px;border-radius:50%;background:#00B8A9;animation:dotPulse 1.4s infinite}
-.ai-dots span:nth-child(2){animation-delay:0.2s}
-.ai-dots span:nth-child(3){animation-delay:0.4s}
-@keyframes dotPulse{0%,80%,100%{opacity:0.3;transform:scale(0.8)}40%{opacity:1;transform:scale(1)}}
-.ai-footer{margin-top:12px;font-size:10px;color:#C5D2DE;display:flex;align-items:center;gap:4px}
-.ai-footer svg{width:10px;height:10px}
 .pb{padding:24px 28px}
 .sec-label{font-size:10px;font-weight:500;color:#8EA5BE;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px}
 .sec-title{font-size:15px;font-weight:500;color:#0A1628;margin-bottom:14px;letter-spacing:-0.01em}
@@ -193,7 +173,7 @@ body{font-family:'DM Sans',-apple-system,system-ui,sans-serif;background:#F4F6F9
 .pmo-txt{font-size:13px;color:#5A7090;line-height:1.6}
 @media print{
   #login-screen{display:none!important}
-  .nav,.filter-bar,.action-btns,.back-btn,.n-tab,#ai-panel{display:none!important}
+  .nav,.filter-bar,.back-btn,.n-tab{display:none!important}
   body{background:white!important}
   .ph{background:#0A1628!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .kpi-band{background:#1a2d48!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -211,7 +191,6 @@ body{font-family:'DM Sans',-apple-system,system-ui,sans-serif;background:#F4F6F9
   .dh-right{flex-direction:row;text-align:left}
   .nav,.pb,.db{padding-left:16px;padding-right:16px}
   .ph,.dh{padding:16px}
-  .action-btns{flex-wrap:wrap}
 }
 </style>
 </head>
@@ -254,16 +233,10 @@ body{font-family:'DM Sans',-apple-system,system-ui,sans-serif;background:#F4F6F9
           <div class="page-title">Master Portfolio Tracker</div>
         </div>
         <div class="ph-right">
-          <div class="action-btns">
-            <button class="btn-ai" onclick="generateBriefing()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-              AI Executive Briefing
-            </button>
-            <button class="btn-pdf" onclick="exportPDF()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-              Export PDF
-            </button>
-          </div>
+          <button class="btn-pdf" onclick="exportPDF()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Export PDF
+          </button>
           <div class="live-pill" style="justify-content:flex-end"><span class="live-dot"></span><span style="color:rgba(255,255,255,0.28);font-size:11px">Live data</span></div>
           <div class="ph-date" id="port-date">—</div>
         </div>
@@ -279,7 +252,6 @@ body{font-family:'DM Sans',-apple-system,system-ui,sans-serif;background:#F4F6F9
       </div>
     </div>
     <div class="pb">
-      <div id="ai-panel" style="display:none"></div>
       <div class="sec-hdr">
         <div><div class="sec-label">Project Health Map</div><div class="sec-title">All Projects by RAG Status</div></div>
         <div class="sec-hint">Click any project to view full detail</div>
@@ -356,7 +328,7 @@ body{font-family:'DM Sans',-apple-system,system-ui,sans-serif;background:#F4F6F9
   </div>
 </div>
 <script>
-const PW_EXEC='HR2026',PW_PMO='Juan8010',DATA_URL='data.json';
+const PW_EXEC='CHRO2026',PW_PMO='Juan8010',DATA_URL='data.json';
 let role=null,projects=[],portfolio={};
 let cRag=null,cPhase=null,cPillar=null;
 
@@ -526,38 +498,6 @@ function renderCharts(list){
   if(cPillar)cPillar.destroy();
   cPillar=new Chart(document.getElementById('ch-pillar'),{type:'bar',data:{labels:Object.keys(pillarMap),datasets:[{data:Object.values(pillarMap),backgroundColor:Object.keys(pillarMap).map((_,i)=>['#00B8A9','#2D4A6B','#F5A623','#E5303A','#5A7090','#8EA5BE'][i%6]),borderRadius:4,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{stepSize:1,font:{size:11}}},y:{grid:{display:false},ticks:{font:{size:11}}}}}});
 }
-
-async function generateBriefing(){
-  const panel=document.getElementById('ai-panel');
-  panel.style.display='block';
-  panel.innerHTML=`<div class="ai-panel"><div class="ai-panel-hdr"><div class="ai-panel-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>AI Executive Briefing</div><button class="ai-close" onclick="closeAIPanel()">✕</button></div><div class="ai-loading"><div class="ai-dots"><span></span><span></span><span></span></div>Generating briefing from live portfolio data...</div></div>`;
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:`You are a senior PMO advisor at TelevisaUnivision writing a concise executive briefing for the SVP of Total Rewards. Write in a professional, direct tone. No bullet points — write 2-3 short paragraphs. First paragraph: overall portfolio health with key numbers. Second paragraph: risks and what needs attention. Third paragraph (only if relevant): what is progressing well and recommended next actions. Be specific about project names. Keep it under 180 words. Today: ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}.`,messages:[{role:'user',content:buildSummary()}]})});
-    const data=await res.json();
-    const text=data?.content?.[0]?.text||'Unable to generate briefing.';
-    const today=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-    panel.innerHTML=`<div class="ai-panel"><div class="ai-panel-hdr"><div class="ai-panel-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>AI Executive Briefing · ${today}</div><button class="ai-close" onclick="closeAIPanel()">✕</button></div><div class="ai-text">${text.replace(/\n\n/g,'</p><p style="margin-top:10px">').replace(/^/,'<p>').replace(/$/,'</p>')}</div><div class="ai-footer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Generated by Claude AI · Based on live Smartsheet data · For internal use only</div></div>`;
-  }catch(e){
-    panel.innerHTML=`<div class="ai-panel"><div class="ai-panel-hdr"><div class="ai-panel-title">AI Executive Briefing</div><button class="ai-close" onclick="closeAIPanel()">✕</button></div><div class="ai-text" style="color:#E5303A">Unable to generate briefing. Please check your connection and try again.</div></div>`;
-  }
-}
-
-function buildSummary(){
-  const grn=projects.filter(p=>ragNorm(p.ragStatus)==='Green').length;
-  const yel=projects.filter(p=>ragNorm(p.ragStatus)==='Yellow').length;
-  const red=projects.filter(p=>ragNorm(p.ragStatus)==='Red').length;
-  const na=projects.filter(p=>ragNorm(p.ragStatus)==='empty').length;
-  let s=`Portfolio for TelevisaUnivision SVP Total Rewards — ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}.\nTotal: ${projects.length}. Green: ${grn}. Yellow: ${yel}. Red: ${red}. Not set: ${na}.\n\nProjects:\n`;
-  projects.forEach(p=>{
-    s+=`- ${p.name} (${p.id}): Phase=${p.phase||'Not set'}, RAG=${p.ragStatus||'Not set'}, Progress=${p.percentComplete||0}%, PM=${shortEmail(p.projectManager)}, Sponsor=${shortEmail(p.sponsor)}`;
-    if(p.topRisk)s+=`, Risk: ${p.topRisk}`;
-    if(p.weeklyUpdate)s+=`, Update: ${p.weeklyUpdate}`;
-    s+='\n';
-  });
-  return s;
-}
-
-function closeAIPanel(){document.getElementById('ai-panel').style.display='none';}
 
 function exportPDF(){
   const today=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});

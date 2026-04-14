@@ -1,32 +1,32 @@
 {
-  "lastUpdated": "2026-04-13T17:00:00Z",
+  "lastUpdated": "2026-04-14T13:58:35.710Z",
   "portfolio": {
     "totalProjects": 1,
     "onTrack": 0,
-    "atRisk": 1,
+    "atRisk": 0,
     "critical": 0,
     "delayed": 0,
-    "needsAttention": 1
+    "needsAttention": 0
   },
   "projects": [
     {
       "id": "BEN-26-001",
       "name": "Benefits Automation",
-      "projectManager": "Michelle Trujillo",
-      "sponsor": "Ricardo Gonzalez",
-      "strategicPillar": "Benefits & Wellbeing",
+      "projectManager": "mtrujillo-calix@televisaunivision.com",
+      "sponsor": "rrgonzalez@televisaunivision.com",
+      "strategicPillar": "",
       "phase": "Intake",
-      "ragStatus": "Yellow",
-      "percentComplete": 31,
-      "startDate": "2026-02-01",
-      "targetEndDate": "2026-08-30",
+      "ragStatus": "",
+      "percentComplete": 0,
+      "startDate": "",
+      "targetEndDate": "",
       "actualEndDate": "",
-      "nextMilestone": "Vendor Contract Execution",
-      "milestoneDate": "2026-04-25",
-      "topRisk": "Vendor contract not executed — blocks all Q2 deliverables",
-      "weeklyUpdate": "Escalation call with vendor scheduled for April 16",
-      "lastUpdated": "2026-04-10",
-      "pmoNotes": "Needs CHRO attention"
+      "nextMilestone": "",
+      "milestoneDate": "",
+      "topRisk": "",
+      "weeklyUpdate": "",
+      "lastUpdated": "",
+      "pmoNotes": ""
     }
   ]
 }

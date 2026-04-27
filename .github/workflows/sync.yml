@@ -1,0 +1,117 @@
+name: Sync Smartsheet to data.json
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # runs every hour
+  workflow_dispatch:       # allows manual Run Now button
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Fetch Smartsheet and build data.json
+        env:
+          SMARTSHEET_TOKEN: ${{ secrets.SMARTSHEET_TOKEN }}
+          SMARTSHEET_SHEET_ID: ${{ secrets.SMARTSHEET_SHEET_ID }}
+        run: |
+          node -e "
+          const https = require('https');
+          const fs = require('fs');
+
+          const token = process.env.SMARTSHEET_TOKEN;
+          const sheetId = process.env.SMARTSHEET_SHEET_ID;
+
+          const options = {
+            hostname: 'api.smartsheet.com',
+            path: '/2.0/sheets/' + sheetId + '?include=columnType',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            }
+          };
+
+          https.get(options, (res) => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+              const sheet = JSON.parse(data);
+              const cols = sheet.columns || [];
+              const rows = sheet.rows || [];
+
+              const colMap = {};
+              cols.forEach(c => { colMap[c.title] = c.id; });
+
+              function val(row, colName) {
+                const id = colMap[colName];
+                if (!id) return '';
+                const cell = row.cells.find(c => c.columnId === id);
+                if (!cell) return '';
+                if (cell.displayValue !== undefined) return String(cell.displayValue);
+                if (cell.value !== undefined) return String(cell.value);
+                return '';
+              }
+
+              function num(row, colName) {
+                const v = val(row, colName);
+                const n = parseFloat(v);
+                return isNaN(n) ? 0 : Math.round(n);
+              }
+
+              const projects = rows
+                .filter(row => val(row, 'Project Name') !== '')
+                .map(row => ({
+                  id:              val(row, 'Project ID'),
+                  name:            val(row, 'Project Name'),
+                  projectManager:  val(row, 'Project Manager'),
+                  sponsor:         val(row, 'Executive Sponsor'),
+                  strategicPillar: val(row, 'Strategic Pillar'),
+                  area:            val(row, 'Area'),
+                  phase:           val(row, 'Phase'),
+                  ragStatus:       val(row, 'RAG Status'),
+                  percentComplete: num(row, '% Complete'),
+                  startDate:       val(row, 'Start Date'),
+                  targetEndDate:   val(row, 'Target End Date'),
+                  actualEndDate:   val(row, 'Actual End Date'),
+                  nextMilestone:   val(row, 'Next Milestone'),
+                  milestoneDate:   val(row, 'Milestone Date'),
+                  topRisk:         val(row, 'Top Risk'),
+                  weeklyUpdate:    val(row, 'Weekly Update'),
+                  lastUpdated:     val(row, 'Last Updated'),
+                  pmoNotes:        val(row, 'PMO Notes'),
+                }));
+
+              const green  = projects.filter(p => p.ragStatus === 'Green').length;
+              const yellow = projects.filter(p => p.ragStatus === 'Yellow').length;
+              const red    = projects.filter(p => p.ragStatus === 'Red').length;
+
+              const output = {
+                lastUpdated: new Date().toISOString(),
+                portfolio: {
+                  totalProjects:  projects.length,
+                  onTrack:        green,
+                  atRisk:         yellow,
+                  critical:       red,
+                  delayed:        yellow + red,
+                  needsAttention: red,
+                },
+                projects: projects
+              };
+
+              fs.writeFileSync('data.json', JSON.stringify(output, null, 2));
+              console.log('data.json updated with', projects.length, 'projects');
+            });
+          }).on('error', (e) => {
+            console.error('Error:', e);
+            process.exit(1);
+          });
+          "
+
+      - name: Commit and push data.json
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add data.json
+          git diff --staged --quiet || git commit -m "sync: update data.json from Smartsheet"
+          git push

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-18T12:39:24.609Z",
+  "lastUpdated": "2026-04-27T20:59:48.448Z",
   "portfolio": {
     "totalProjects": 4,
     "onTrack": 1,
@@ -15,10 +15,11 @@
       "projectManager": "Michelle Trujillo-Calix",
       "sponsor": "Ricardo Gonzalez",
       "strategicPillar": "Benefits & Wellbeing",
+      "area": "Total Rewards",
       "phase": "Initiation",
       "ragStatus": "Yellow",
-      "percentComplete": 0,
-      "startDate": "2026-05-01",
+      "percentComplete": 19,
+      "startDate": "2025-12-15",
       "targetEndDate": "2026-12-31",
       "actualEndDate": "",
       "nextMilestone": "Map Current vs Future State Process",
@@ -26,28 +27,27 @@
       "topRisk": "",
       "weeklyUpdate": "",
       "lastUpdated": "",
-      "pmoNotes": "",
-      "area": "Total Rewards"
+      "pmoNotes": ""
     },
     {
-      "id": "COMP-26-001",
-      "name": "Testing 2",
+      "id": "COMP-26-002",
+      "name": "Job Architecture",
       "projectManager": "Juan Diaz",
       "sponsor": "",
       "strategicPillar": "Compensation, Job Arch. & Market Pricing",
+      "area": "Total Rewards",
       "phase": "Planning",
       "ragStatus": "Green",
-      "percentComplete": 5,
-      "startDate": "2026-04-06",
-      "targetEndDate": "2026-05-22",
+      "percentComplete": 0,
+      "startDate": "",
+      "targetEndDate": "",
       "actualEndDate": "",
       "nextMilestone": "",
       "milestoneDate": "",
       "topRisk": "",
       "weeklyUpdate": "",
       "lastUpdated": "",
-      "pmoNotes": "",
-      "area": "Total Rewards"
+      "pmoNotes": ""
     },
     {
       "id": "TAL-26-001",
@@ -55,6 +55,7 @@
       "projectManager": "Camila Moreno",
       "sponsor": "",
       "strategicPillar": "Talent for Critical Roles",
+      "area": "Talent",
       "phase": "Execution",
       "ragStatus": "Red",
       "percentComplete": 87,
@@ -66,8 +67,7 @@
       "topRisk": "",
       "weeklyUpdate": "",
       "lastUpdated": "",
-      "pmoNotes": "",
-      "area": "Talent"
+      "pmoNotes": ""
     },
     {
       "id": "HRIS-26-001",
@@ -75,6 +75,7 @@
       "projectManager": "Jorge",
       "sponsor": "",
       "strategicPillar": "HR Technology & Process Modernization",
+      "area": "HRBPs",
       "phase": "Planning",
       "ragStatus": "Yellow",
       "percentComplete": 10,
@@ -86,8 +87,7 @@
       "topRisk": "",
       "weeklyUpdate": "",
       "lastUpdated": "",
-      "pmoNotes": "",
-      "area": "HRBPs"
+      "pmoNotes": ""
     }
   ]
 }

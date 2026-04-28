@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-28T11:50:20.641Z",
+  "lastUpdated": "2026-04-28T14:27:26.387Z",
   "portfolio": {
     "totalProjects": 4,
     "onTrack": 1,
@@ -39,8 +39,8 @@
       "phase": "Planning",
       "ragStatus": "Green",
       "percentComplete": 0,
-      "startDate": "",
-      "targetEndDate": "",
+      "startDate": "2026-04-21",
+      "targetEndDate": "2026-04-21",
       "actualEndDate": "",
       "nextMilestone": "",
       "milestoneDate": "",

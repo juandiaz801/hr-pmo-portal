@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-02T15:53:51.108Z",
+  "lastUpdated": "2026-05-02T16:39:27.316Z",
   "portfolio": {
     "totalProjects": 4,
     "onTrack": 1,
@@ -15,7 +15,6 @@
       "projectManager": "Michelle Trujillo-Calix",
       "sponsor": "rrgonzalez@televisaunivision.com",
       "strategicPillar": "Benefits & Wellbeing",
-      "area": "Total Rewards",
       "phase": "Initiation",
       "ragStatus": "Yellow",
       "percentComplete": 19,
@@ -27,7 +26,8 @@
       "topRisk": "",
       "weeklyUpdate": "",
       "lastUpdated": "",
-      "pmoNotes": ""
+      "pmoNotes": "",
+      "area": "Total Rewards"
     },
     {
       "id": "COMP-26-002",
@@ -35,7 +35,6 @@
       "projectManager": "Juan Diaz",
       "sponsor": "rrgonzalez@televisaunivision.com",
       "strategicPillar": "Compensation, Job Arch. & Market Pricing",
-      "area": "Total Rewards",
       "phase": "Planning",
       "ragStatus": "Green",
       "percentComplete": 0,
@@ -47,7 +46,8 @@
       "topRisk": "",
       "weeklyUpdate": "",
       "lastUpdated": "",
-      "pmoNotes": ""
+      "pmoNotes": "",
+      "area": "Total Rewards"
     },
     {
       "id": "TAL-26-001",
@@ -55,7 +55,6 @@
       "projectManager": "Camila Moreno",
       "sponsor": "",
       "strategicPillar": "Talent for Critical Roles",
-      "area": "Talent",
       "phase": "Execution",
       "ragStatus": "Red",
       "percentComplete": 87,
@@ -67,7 +66,8 @@
       "topRisk": "",
       "weeklyUpdate": "",
       "lastUpdated": "",
-      "pmoNotes": ""
+      "pmoNotes": "",
+      "area": "Talent"
     },
     {
       "id": "HRIS-26-001",
@@ -75,7 +75,6 @@
       "projectManager": "Jorge",
       "sponsor": "",
       "strategicPillar": "HR Technology & Process Modernization",
-      "area": "HRBPs",
       "phase": "Planning",
       "ragStatus": "Yellow",
       "percentComplete": 10,
@@ -87,7 +86,8 @@
       "topRisk": "",
       "weeklyUpdate": "",
       "lastUpdated": "",
-      "pmoNotes": ""
+      "pmoNotes": "",
+      "area": "HRBPs"
     }
   ]
 }

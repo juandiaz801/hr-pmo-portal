@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-03T21:39:24.039Z",
+  "lastUpdated": "2026-05-03T21:51:40.710Z",
   "portfolio": {
     "totalProjects": 4,
     "onTrack": 1,
@@ -15,6 +15,7 @@
       "projectManager": "Michelle Trujillo-Calix",
       "sponsor": "rrgonzalez@televisaunivision.com",
       "strategicPillar": "Benefits & Wellbeing",
+      "area": "Total Rewards",
       "phase": "Initiation",
       "ragStatus": "Yellow",
       "percentComplete": 19,
@@ -26,8 +27,7 @@
       "topRisk": "",
       "weeklyUpdate": "",
       "lastUpdated": "",
-      "pmoNotes": "",
-      "area": "Total Rewards"
+      "pmoNotes": ""
     },
     {
       "id": "COMP-26-002",
@@ -35,6 +35,7 @@
       "projectManager": "Juan Diaz",
       "sponsor": "rrgonzalez@televisaunivision.com",
       "strategicPillar": "Compensation, Job Arch. & Market Pricing",
+      "area": "Total Rewards",
       "phase": "Planning",
       "ragStatus": "Green",
       "percentComplete": 0,
@@ -46,8 +47,7 @@
       "topRisk": "",
       "weeklyUpdate": "",
       "lastUpdated": "",
-      "pmoNotes": "",
-      "area": "Total Rewards"
+      "pmoNotes": ""
     },
     {
       "id": "TAL-26-001",
@@ -55,6 +55,7 @@
       "projectManager": "Camila Moreno",
       "sponsor": "",
       "strategicPillar": "Talent for Critical Roles",
+      "area": "Talent",
       "phase": "Execution",
       "ragStatus": "Red",
       "percentComplete": 87,
@@ -66,8 +67,7 @@
       "topRisk": "",
       "weeklyUpdate": "",
       "lastUpdated": "",
-      "pmoNotes": "",
-      "area": "Talent"
+      "pmoNotes": ""
     },
     {
       "id": "HRIS-26-001",
@@ -75,6 +75,7 @@
       "projectManager": "Jorge",
       "sponsor": "",
       "strategicPillar": "HR Technology & Process Modernization",
+      "area": "HRBPs",
       "phase": "Planning",
       "ragStatus": "Yellow",
       "percentComplete": 10,
@@ -86,8 +87,7 @@
       "topRisk": "",
       "weeklyUpdate": "",
       "lastUpdated": "",
-      "pmoNotes": "",
-      "area": "HRBPs"
+      "pmoNotes": ""
     }
   ]
 }
